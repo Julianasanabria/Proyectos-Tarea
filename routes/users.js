@@ -15,4 +15,5 @@ router.put('/:id', auth.verifyToken, UserController.updateUser);
 // Eliminar un usuario
 router.delete('/:id', auth.verifyToken, UserController.deleteUser);
 
-module.exports = router;
+
+export default router;

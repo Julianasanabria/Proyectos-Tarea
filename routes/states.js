@@ -18,4 +18,5 @@ router.put('/:id', auth.verifyToken, StateController.updateState);
 // Eliminar un estado
 router.delete('/:id', auth.verifyToken, StateController.deleteState);
 
-module.exports = router;
+
+export default router;

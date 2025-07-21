@@ -1,8 +1,5 @@
-/* const express = require('express');
-const router = express.Router();
-const AuthController = require('../controllers/auth.controller'); */
 import Routes from "express"
-import AuthController from "../controllers/auth.controller.js"
+import AuthController from "../controllers/autentication.js"
 
 const router = Routes()
 

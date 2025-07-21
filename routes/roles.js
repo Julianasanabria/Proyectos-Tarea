@@ -18,4 +18,4 @@ router.put('/:id', auth.verifyToken, RoleController.updateRole);
 // Eliminar un rol
 router.delete('/:id', auth.verifyToken, RoleController.deleteRole);
 
-module.exports = router;
+export default router;

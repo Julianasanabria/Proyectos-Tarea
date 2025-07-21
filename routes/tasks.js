@@ -18,4 +18,4 @@ router.put('/:id', auth.verifyToken, TaskController.updateTask);
 // Eliminar una tarea
 router.delete('/:id', auth.verifyToken, TaskController.deleteTask);
 
-module.exports = router;
+export default router;
