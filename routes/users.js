@@ -1,19 +1,19 @@
-const express = require('express');
-const router = express.Router();
-const UserController = require('../controllers/user.controller');
-const auth = require('../middlewares/auth.middleware');
+import Routes from "express"
+import AuthController from "../controllers/users.js"
+
+const router = Routes()
 
 // Obtener todos los usuarios
-router.get('/', auth.verifyToken, UserController.getAllUsers);
+router.get('/', AuthController.verifyToken, UserController.getAllUsers);
 
 // Obtener un usuario por ID
-router.get('/:id', auth.verifyToken, UserController.getUserById);
+router.get('/:id', AuthController.verifyToken, UserController.getUserById);
 
 // Actualizar un usuario
-router.put('/:id', auth.verifyToken, UserController.updateUser);
+router.put('/:id', AuthController.verifyToken, UserController.updateUser);
 
 // Eliminar un usuario
-router.delete('/:id', auth.verifyToken, UserController.deleteUser);
+router.delete('/:id', AuthController.verifyToken, UserController.deleteUser);
 
 
 export default router;

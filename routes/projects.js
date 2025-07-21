@@ -1,31 +1,29 @@
-const express = require('express');
-const router = express.Router();
-const ProjectController = require('../controllers/project.controller');
-const auth = require('../middlewares/auth.middleware');
+import Routes from "express"
+import AuthController from "../controllers/projects.js"
+
+const router = Routes()
 
 // Listar proyectos del usuario autenticado
-router.get('/', auth.verifyToken, ProjectController.getProjectsByUser);
+router.get('/', AuthController.verifyToken, ProjectController.getProjectsByUser);
 
 // Crear un nuevo proyecto
-router.post('/', auth.verifyToken, ProjectController.createProject);
+router.post('/', AuthController.verifyToken, ProjectController.createProject);
 
 // Obtener un proyecto específico
-router.get('/:id', auth.verifyToken, ProjectController.getProjectById);
+router.get('/:id', AuthController.verifyToken, ProjectController.getProjectById);
 
 // Actualizar un proyecto
-router.put('/:id', auth.verifyToken, ProjectController.updateProject);
+router.put('/:id', AuthController.verifyToken, ProjectController.updateProject);
 
 // Eliminar un proyecto
-router.delete('/:id', auth.verifyToken, ProjectController.deleteProject);
+router.delete('/:id', AuthController.verifyToken, ProjectController.deleteProject);
 
 // Agregar miembro al proyecto
-router.post('/:id/members', auth.verifyToken, ProjectController.addMember);
+router.post('/:id/members', AuthController.verifyToken, ProjectController.addMember);
 
 // Remover miembro del proyecto
-router.delete('/:id/members/:userId', auth.verifyToken, ProjectController.removeMember);
+router.delete('/:id/members/:userId', AuthController.verifyToken, ProjectController.removeMember);
 
 // Cambiar el estado del proyecto
-router.put('/:id/status', auth.verifyToken, ProjectController.updateProjectStatus);
-
-
+router.put('/:id/status', AuthController.verifyToken, ProjectController.updateProjectStatus);
 export default router;

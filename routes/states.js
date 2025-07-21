@@ -1,22 +1,22 @@
-const express = require('express');
-const router = express.Router();
-const StateController = require('../controllers/state.controller');
-const auth = require('../middlewares/auth.middleware');
+import Routes from "express"
+import AuthController from "../controllers/states.js"
+
+const router = Routes()
 
 // Obtener todos los estados
-router.get('/', auth.verifyToken, StateController.getAllStates);
+router.get('/', AuthController.verifyToken, StateController.getAllStates);
 
 // Obtener un estado por ID
-router.get('/:id', auth.verifyToken, StateController.getStateById);
+router.get('/:id', AuthController.verifyToken, StateController.getStateById);
 
 // Crear un nuevo estado
-router.post('/', auth.verifyToken, StateController.createState);
+router.post('/', AuthController.verifyToken, StateController.createState);
 
 // Actualizar un estado
-router.put('/:id', auth.verifyToken, StateController.updateState);
+router.put('/:id', AuthController.verifyToken, StateController.updateState);
 
 // Eliminar un estado
-router.delete('/:id', auth.verifyToken, StateController.deleteState);
+router.delete('/:id', AuthController.verifyToken, StateController.deleteState);
 
 
 export default router;

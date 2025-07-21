@@ -1,19 +1,19 @@
-const express = require('express');
-const router = express.Router();
-const CategoryController = require('../controllers/category.controller');
-const auth = require('../middlewares/auth.middleware');
+import Routes from "express"
+import AuthController from "../controllers/categories.js"
+
+const router = Routes()
 
 // Obtener todas las categorías (protegido)
-router.get('/', auth.verifyToken, CategoryController.getAll);
+router.get('/', AuthController.verifyToken, CategoryController.getAll);
 
 // Crear una categoría (protegido)
-router.post('/', auth.verifyToken, CategoryController.create);
+router.post('/', AuthController.verifyToken, CategoryController.create);
 
 // Actualizar una categoría por ID (protegido)
-router.put('/:id', auth.verifyToken, CategoryController.update);
+router.put('/:id', AuthController.verifyToken, CategoryController.update);
 
 // Eliminar una categoría por ID (protegido)
-router.delete('/:id', auth.verifyToken, CategoryController.delete);
+router.delete('/:id', AuthController.verifyToken, CategoryController.delete);
 
 
 export default router;
