@@ -1,20 +1,20 @@
-import jwt from "jsonwebtoken";
-import Usuarios from "../models/users.js"; // Asegúrate de que exista el modelo
-import { generarJWT } from "../helpers/jwt.js"; // Función que genere un JWT
+import users from "../models/users.js"; // Asegúrate de que exista el modelo
+import { generarJWT } from "../middlewares/validar-jwt.js"; // Función que genere un JWT
 
 const AuthController ={
-    obtainRegister: async (req, res)=>{
+    register: async (req, res)=>{
+        //const {firstname, lastname, email, password} = req.body;
         try{
-            const register = await Register.find();
+            const register = await users.find();
             res.json({register});
         }catch(error){
-            res.status(400).json({msg: "Error al buscar le usuario"});
+            res.status(400).json({msg: "Error al buscar el usuario"});
         }
     },
     login:async (req, res) => {
         const {email, password} = req.body;
         try {
-            const usuario = await Usuarios.findOne({email});
+            const usuario = await users.findOne({email});
 
             if (!usuario){
                 return res.status(400).json({msg: "Usuario no encontrado"});
@@ -65,7 +65,7 @@ const AuthController ={
     forgotPassword: async (req, res) => {
         try {
             const { email } = req.body;
-            const usuario = await Usuarios.findOne({ email });
+            const usuario = await users.findOne({ email });
             if (!usuario) {
                 return res.status(400).json({ msg: "Usuario no encontrado" });
             }
@@ -83,7 +83,7 @@ const AuthController ={
             const { token, newPassword } = req.body;
             // Verifica el token (este debe haber sido generado previamente en una lógica de forgotPassword)
             const payload = jwt.verify(token, process.env.SECRET_KEY);
-            const usuario = await Usuarios.findById(payload.id);
+            const usuario = await users.findById(payload.id);
             if (!usuario) {
                 return res.status(400).json({ msg: "Usuario no encontrado" });
             }
