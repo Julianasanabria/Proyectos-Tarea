@@ -1,14 +1,14 @@
-import jwt from "jsonwebtoken";
 import users from "../models/users.js"; // Asegúrate de que exista el modelo
-import { generarJWT } from "../helpers/jwt.js"; // Función que genere un JWT
+import { generarJWT } from "../middlewares/validar-jwt.js"; // Función que genere un JWT
 
 const AuthController ={
     register: async (req, res)=>{
+        //const {firstname, lastname, email, password} = req.body;
         try{
             const register = await users.find();
             res.json({register});
         }catch(error){
-            res.status(400).json({msg: "Error al buscar los usuarios"});
+            res.status(400).json({msg: "Error al buscar el usuario"});
         }
     },
     login:async (req, res) => {
