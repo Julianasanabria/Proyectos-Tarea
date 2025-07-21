@@ -15,4 +15,5 @@ router.put('/:id', auth.verifyToken, CategoryController.update);
 // Eliminar una categoría por ID (protegido)
 router.delete('/:id', auth.verifyToken, CategoryController.delete);
 
-module.exports = router;
+
+export default router;

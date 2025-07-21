@@ -15,4 +15,5 @@ router.put('/:id', auth.verifyToken, CommentController.updateComment);
 // Eliminar un comentario
 router.delete('/:id', auth.verifyToken, CommentController.deleteComment);
 
-module.exports = router;
+
+export default router;

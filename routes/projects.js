@@ -27,4 +27,5 @@ router.delete('/:id/members/:userId', auth.verifyToken, ProjectController.remove
 // Cambiar el estado del proyecto
 router.put('/:id/status', auth.verifyToken, ProjectController.updateProjectStatus);
 
-module.exports = router;
+
+export default router;

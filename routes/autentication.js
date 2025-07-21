@@ -20,4 +20,5 @@ router.post('/forgot-password', AuthController.forgotPassword);
 // Restablecer contraseña
 router.post('/reset-password', AuthController.resetPassword);
 
-module.exports = router;
+
+export default router;

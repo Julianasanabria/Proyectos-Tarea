@@ -18,4 +18,5 @@ router.post('/generate-summary', auth.verifyToken, AIController.generateSummary)
 // Sugerencias de mejora basadas en comentarios y estados
 router.post('/suggest-improvements', auth.verifyToken, AIController.suggestImprovements);
 
-module.exports = router;
+
+export default router;
