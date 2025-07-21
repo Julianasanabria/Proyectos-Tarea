@@ -1,6 +1,10 @@
-const express = require('express');
+/* const express = require('express');
 const router = express.Router();
-const AuthController = require('../controllers/auth.controller');
+const AuthController = require('../controllers/auth.controller'); */
+import Routes from "express"
+import AuthController from "../controllers/auth.controller.js"
+
+const router = Routes()
 
 // Registro de nuevo usuario
 router.post('/register', AuthController.register);
@@ -20,4 +24,5 @@ router.post('/forgot-password', AuthController.forgotPassword);
 // Restablecer contraseña
 router.post('/reset-password', AuthController.resetPassword);
 
-module.exports = router;
+
+export default router;
