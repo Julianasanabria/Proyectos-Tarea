@@ -9,4 +9,4 @@ const statesSchema = new mongoose.Schema({
     updatedAt: {type: Date, required: true}
 })
 
-export default mongoose.model("states", statesSchema)
+export default mongoose.model("States", statesSchema)
