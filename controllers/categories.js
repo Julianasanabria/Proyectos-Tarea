@@ -12,7 +12,7 @@ export default {
   },
 
   async createCategory(req, res){
-      try{
+      try{////
         const {name, description}=req.body;
 
         const newCategory =({
