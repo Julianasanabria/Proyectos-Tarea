@@ -1,7 +1,7 @@
-import Role from "../models/role.js";
+import Role from "../models/roles.js";
 
-export default {
-    async getAllRoles(req, res){
+const RoleController = {
+    getAllRoles: async (req, res) => {
         try{
             const roles = await Role.find({ isActive:true});
             res.json(roles);
@@ -11,7 +11,7 @@ export default {
         }
     },
 
-    async createRole(req, res){
+    createRole: async (req, res) => {
         try{
             const {name, description}=req.body;
 
@@ -27,7 +27,7 @@ export default {
         console.log(error);
     }
 },
- async update(req, res) {
+    updateRole: async (req, res) => {
     try {
         const { name, description, isActive } = req.body;
         const updatedRole = await Role.findByIdAndUpdate(
@@ -45,7 +45,7 @@ export default {
     }
  },
 
-  async deleteRole(req, res) {
+    deleteRole: async (req, res) => {
     try {
       // Verificar si el rol está siendo usado antes de eliminar
       const usersWithRole = await User.countDocuments({ globalRole: req.params.id });
@@ -58,5 +58,7 @@ export default {
     } catch (error) {
       res.status(500).json({ message: 'Error al eliminar rol' });
     }
-  }
+  },
 }
+
+export default RoleController;

@@ -1,25 +1,26 @@
-import Routes from "express"
-import AuthController from "../controllers/autentication.js"
+import Routes from "express";
+import AuthController from "../controllers/autentication.js";
+//import auth from '../middlewares/validar-jwt.js';
 
 const router = Routes()
 
 // Registro de nuevo usuario
-router.post('/register', AuthController.register);
+router.post('/auth/register', AuthController.register);
 
 // Inicio de sesión
-router.post('/login', AuthController.login);
+router.post('/auth/login', AuthController.login);
 
 // Renovar token
-router.post('/refresh', AuthController.refreshToken);
+router.post('/auth/refresh', AuthController.refreshToken);
 
 // Cerrar sesión
-router.post('/logout', AuthController.logout);
+router.post('/auth/logout', AuthController.logout);
 
 // Recuperar contraseña
-router.post('/forgot-password', AuthController.forgotPassword);
+router.post('/auth/forgot-password', AuthController.forgotPassword);
 
 // Restablecer contraseña
-router.post('/reset-password', AuthController.resetPassword);
+router.post('/auth/reset-password', AuthController.resetPassword);
 
 
 export default router;

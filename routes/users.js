@@ -1,21 +1,23 @@
 import Routes from "express"
 import userController from "../controllers/users.js"
-import AuthController from "../controllers/autentication.js";
+import { validarJWT } from "../middlewares/validar-jwt.js";
 
 const router = Routes()
 
 // Obtener todos los usuarios
-router.get('/', AuthController.verifyToken, userController.getAllUsers);
+router.get('/', userController.getAllUsers);
 
 // Obtener un usuario por ID
-router.get('/:id', AuthController.verifyToken, userController.getUserById);
+router.get('/:id', validarJWT, userController.getUserById);
 
 // Actualizar un usuario
-router.put('/:id', AuthController.verifyToken, userController.updateUser);
+router.put('/:id',  userController.updateUser);
 
 // Eliminar un usuario
-router.delete('/:id', AuthController.verifyToken, userController.deleteUser);
+router.delete('/:id',  userController.deleteUser);
 
 // Cambiar rol
-router.put('/:id/role', AuthController.verifyToken, userController.changeRole);
+router.put('/:id/role',  userController.changeRole);
+
+
 export default router;

@@ -5,14 +5,14 @@ const usersSchema = new mongoose.Schema({
     lastName: {type: String, required: true},
     email: {type: String, unique: true, required: true},
     password: {type: String, required: true},
-    avatar: {type: String, required: true},
-    phone: {type: String, required: true},
+    avatar: {type: String},
+    phone: {type: String},
     globalRole: {type: mongoose.Schema.Types.ObjectId, ref: "Roles", required: true},
     isActive: {type: Boolean, required: true, default: true},
     isEmailVerified: {type: Boolean, required: true, default: false},
     lastLogin: {type: Date},
-    createdAt: {type: Date, required: true},
-    updatedAt: {type: Date, required: true}
+    createdAt: {type: Date, default: new Date()},
+    updatedAt: {type: Date, default: new Date()}
 })
 
 export default mongoose.model("Users", usersSchema)

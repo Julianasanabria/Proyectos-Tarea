@@ -1,21 +1,21 @@
-import Routes from "express"
-import AuthController from "../controllers/roles.js"
+import Routes from "express";
+import RoleController from "../controllers/roles.js";
 
 const router = Routes()
 
 // Obtener todos los roles
-router.get('/', AuthController.verifyToken, RoleController.getAllRoles);
+router.get('/',  RoleController.getAllRoles);
 
 // Obtener un rol por ID
-router.get('/:id', AuthController.verifyToken, RoleController.getRoleById);
+//router.get('/:id',  RoleController.getRoleById);
 
 // Crear un nuevo rol
-router.post('/', AuthController.verifyToken, RoleController.createRole);
+router.post('/roles',  RoleController.createRole);
 
 // Actualizar un rol
-router.put('/:id', AuthController.verifyToken, RoleController.updateRole);
+router.put('/:id',  RoleController.updateRole);
 
 // Eliminar un rol
-router.delete('/:id', AuthController.verifyToken, RoleController.deleteRole);
+router.delete('/:id',  RoleController.deleteRole);
 
 export default router;

@@ -1,64 +1,199 @@
-import users from "../models/users.js"; // Asegúrate de que exista el modelo
+import users from "../models/users.js";
+import Role from '../models/roles.js';
+import bcryptjs from "bcryptjs";
 import { generarJWT } from "../middlewares/validar-jwt.js"; // Función que genere un JWT
 
 const AuthController ={
     register: async (req, res)=>{
-        //const {firstname, lastname, email, password} = req.body;
         try{
-            const register = await users.find();
-            res.json({register});
+            const {firstName, lastName, email, password} = req.body;
+
+            // 1. Validamos campos requeridos
+
+            if (!firstName || !lastName || !email || !password) {
+                return res.status(400).json({
+                    success: false,
+                    msg: 'Todos los campos son obligatorios: firstName, lastName, email, password.',
+                });
+            }
+
+            // 2. Vericamos si el correo ya está registrado
+            const emailExists = await users.findOne({ email: email.toLowerCase().trim() });
+            if (emailExists) {
+                return res.status(400).json({
+                    success: false,
+                    msg: 'El correo electrónico ya está registrado.',
+                });
+            }
+
+            // 3. Encriptamos la contraseña
+            const saltRounds = 10;
+            const hashedPassword = await bcryptjs.hash(password, saltRounds);
+
+            // 4. Asignar rol por defecto 
+            const defaultRole = await Role.findOne({ name: 'Developer' });
+            if (!defaultRole || !defaultRole.isActive) {
+                console.error('Rol por defecto "Developer" no encontrado o inactivo en la BD.');
+                return res.status(500).json({
+                    success: false,
+                    msg: 'Error interno del servidor al asignar rol por defecto.',
+                });
+            }
+
+            // 5. Creamos el nuevo usuario
+            const newUser = new users({
+                firstName: firstName.trim(),
+                lastName: lastName.trim(),
+                email: email.toLowerCase().trim(),
+                password: hashedPassword,
+                globalRole: defaultRole._id,
+            });
+
+            // 6. Guardamos el usuario en la Base de Datos
+            await newUser.save();
+
+            // 7. Generamos el token
+            const token = await generarJWT(newUser._id, newUser.email, newUser.globalRole);
+
+            // 8. Devolvemos el usuario (sin incluir la contraseña)
+            res.status(201).json({
+                success: true,
+                msg: 'Usuario registrado correctamente.',
+                data: {
+                    users: {
+                        _id: newUser._id,
+                        firstName: newUser.firstName,
+                        lastName: newUser.lastName,
+                        email: newUser.email,
+                        globalRole: defaultRole.name,
+                        avatar: newUser.avatar,
+                    },
+                    token,
+                },
+            });
         }catch(error){
-            res.status(400).json({msg: "Error al buscar el usuario"});
+            console.error('Error en registro de usuario:', error)
+            res.status(500).json({
+                success: false,
+                msg: "Error interno del servidor al registrar el usuario",
+            });
         }
     },
+
+    // Inicio de sesión de un usuario
     login:async (req, res) => {
-        const {email, password} = req.body;
         try {
-            const usuario = await users.findOne({email});
-
-            if (!usuario){
-                return res.status(400).json({msg: "Usuario no encontrado"});
+            const {email, password} = req.body;
+            
+            // 1. Validamos el email y la contraseña
+            if (!email || !password){
+                return res.status(400).json({
+                    success: false,
+                    msg: "Correo electrónico y contraseña son obligatorios.",
+                });
             }
-            if (password !== usuario.password){
-                return res.status(400).json({msg: "Contraseña incorrecta"});
+
+            // 2. Buscamos usuario por email
+            const user = await users.findOne({ email: email.toLowerCase().trim() });
+            if (!user){
+                return res.status(400).json({
+                    success: false,
+                    msg: 'Credenciales incorrectas.',
+                });
             }
 
-            const token = await generarJWT(usuario.id);
+            // 3. Verificamos si el usuario esta activo
+            if (!user.isActive) {
+                return res.status(400).json({
+                    success: false,
+                    msg: 'Cuenta de usuario inactiva.',
+                });
+            }
 
+            // 4. Comparamos la contraseña
+            const isPasswordValid = await bcryptjs.compare(password, user.password);
+            if (!isPasswordValid) {
+                return res.status(400).json({
+                    success: false,
+                    msg: 'Credenciales incorrectas.',
+                });
+            }
+
+            // 5. Generamos el token
+            const token = await generarJWT(user._id, user.email, user.globalRole);
+
+            // 6. Actualizamos lastLogin
+            user.lastLogin = new Date();
+            await user.save({ validateBeforeSave: false }); // Evitamos validar otros campos
+
+            // 7. Obtener el nombre del rol
+            const userRole = await Role.findById(user.globalRole);
+            const roleName = userRole ? userRole.name : 'Sin Rol';
+
+            // 8. Devolvemos la respuesta existosa
             res.json({
+                success: true,
                 msg: "Login exitoso",
-                usuario,
-                token
-            })
+                data: {
+                    user: {
+                        _id: user._id,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        email: user.email,
+                        globalRole: roleName,
+                        avatar: user.avatar,
+                    },
+                    token,
+                },
+            });
         } catch (error) {
-            res.status(500).json({msg: "Error en el servidor"});
+            console.error('Error en inicio de sesión:', error)
+            res.status(500).json({
+                success: false,
+                msg: "Error interno del servidor al iniciar sesión.",
+            });
         }
     },
 
     // Renovar token: Recibe el token anterior, lo verifica y genera uno nuevo
     refreshToken: async (req, res) => {
         try {
-            const { token } = req.body;
-            if (!token) {
-                return res.status(400).json({ msg: "Token es requerido" });
-            }
-            // Verifica el token recibido
-            const payload = jwt.verify(token, process.env.SECRET_KEY);
-            // Genera un nuevo JWT utilizando el id del usuario
-            const newToken = await generarJWT(payload.id);
+            const { _id, email, globalRole} = req.user;
+
+            // Generamos un token nuevo
+            const token = await generarJWT(_id, email, globalRole);
+
             res.json({
+                success: true,
                 msg: "Token renovado exitosamente",
-                token: newToken
+                data: {
+                    token,
+                },
             });
         } catch (error) {
-            res.status(500).json({ msg: "Error al renovar token" });
+            console.error('Error al renovar el token:', error);
+            res.status(500).json({
+                success: false,
+                msg: 'Error interno del servidor al renovar el token.',
+            });
         }
     },
 
     // Cerrar sesión: En JWT sin estado, normalmente se maneja en el cliente eliminando el token
     logout: async (req, res) => {
-        // Opcional: implementar lógica de blacklist si es necesario
-        res.json({ msg: "Logout exitoso" });
+        try {
+            // Opcional: implementar lógica de blacklist si es necesario
+            res.json({ 
+                success: true,
+                msg: "Sesión cerrada correctamente.",
+            });
+        } catch (error) {
+            console.error('Error en logout:', error);
+            res.status(500).json({
+                success: false,
+                msg: 'Error interno del servidor al cerrar sesión.',
+            });
+        }
     },
 
     // Recuperar contraseña: Busca el usuario por email y envía (simulado) un correo con instrucciones

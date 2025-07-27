@@ -35,6 +35,7 @@ export const validarJWT = async (req, res, next)=>{
                 msg:"token no valido"  //usuario no existente 
             })
         }
+        req.user = user
         next();
     } catch (error) {
         res.status(401).json({
