@@ -1,6 +1,6 @@
 import Routes from "express";
 import AuthController from "../controllers/autentication.js";
-//import auth from '../middlewares/validar-jwt.js';
+import {validarJWT} from '../middlewares/validar-jwt.js';
 
 const router = Routes()
 
@@ -11,10 +11,10 @@ router.post('/auth/register', AuthController.register);
 router.post('/auth/login', AuthController.login);
 
 // Renovar token
-router.post('/auth/refresh', AuthController.refreshToken);
+router.post('/auth/refresh', validarJWT, AuthController.refreshToken);
 
 // Cerrar sesión
-router.post('/auth/logout', AuthController.logout);
+router.post('/auth/logout', validarJWT, AuthController.logout);
 
 // Recuperar contraseña
 router.post('/auth/forgot-password', AuthController.forgotPassword);

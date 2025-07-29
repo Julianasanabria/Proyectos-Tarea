@@ -6,7 +6,7 @@ import { generarJWT } from "../middlewares/validar-jwt.js"; // Función que gene
 const AuthController ={
     register: async (req, res)=>{
         try{
-            const {firstName, lastName, email, password} = req.body;
+            const {firstName, lastName, email, password, globalRole} = req.body;
 
             // 1. Validamos campos requeridos
 
@@ -119,6 +119,12 @@ const AuthController ={
                 });
             }
 
+            // Cuando la autenticación es exitosa, actualizar estado de conexión
+            await users.findByIdAndUpdate(user._id,{
+                isOnline: true,
+                lastSeen: new Date(),
+            });
+
             // 5. Generamos el token4
             const token = await generarJWT(user._id);
 
@@ -158,10 +164,20 @@ const AuthController ={
     // Renovar token: Recibe el token anterior, lo verifica y genera uno nuevo
     refreshToken: async (req, res) => {
         try {
-            const { _id, email, globalRole} = req.user;
+
+            // Verifica que req.user exista
+            if (!req.user) {
+                return res.status(401).json({
+                    success: false,
+                    msg: 'No hay usuario autenticado'
+                });
+            }
+
+            const { _id } = req.user;
 
             // Generamos un token nuevo
             const token = await generarJWT(_id);
+            console.log('Usuario para refresh:', req.user);
 
             res.json({
                 success: true,
@@ -183,9 +199,36 @@ const AuthController ={
     logout: async (req, res) => {
         try {
             // Opcional: implementar lógica de blacklist si es necesario
+            
+            if (!req.user) {
+                return res.status(401).json({
+                    success: false,
+                    msg: 'No hay usuario autenticado'
+                });
+            }
+            console.log(`Usuario cerrando sesión ${req.user._id}`)
+            //const { _id } = req.user;
+
+            // Actualizacion estado de conexión y ultima vez
+            const updateUser = await users.findByIdAndUpdate(
+                req.user._id,
+                {
+                    isOnline: false,
+                    lastSeen: new Date(),
+                },{new: true, runValidators: true}
+            );
+            if (!updateUser){
+                return res.status(401).json({
+                    success: false,
+                    msg: "Usuario no encontrado al cerrar sesión"
+                });
+            }
+            console.log(`Usuario actualizado - isOnline: ${updateUser.isOnline}, lastseen: ${updateUser.lastSeen}`);
+
             res.json({ 
                 success: true,
                 msg: "Sesión cerrada correctamente.",
+                userId: req.user._id,
             });
         } catch (error) {
             console.error('Error en logout:', error);
