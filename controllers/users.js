@@ -6,15 +6,18 @@ import { generarJWT } from "../middlewares/validar-jwt.js"
 const userController = {
     getAllUsers: async (req, res) => {
         try {
+            
             // Verificamos que el rol sea Admin y que esté autenticado
             if (!req.user || req.user.globalRole?.name !== 'Admin') {
+                console.log('Acceso denegado - Usuario:', req.user?.globalRole?.name);
                 return res.status(403).json({
                     success: false,
                     message: 'Acceso denegado, solo se permite el Administrador'
                 });
             }
-            const usuarios = await User.find({ isActive: true }).select('-password').populate('globalRole', 'name description');
+            const usuarios = await User.find({ isActive: true }).select('-password').populate({ path: 'globalRole', select: 'name description' });
             
+            console.log('Usuarios encontrados:', usuarios);
             res.json({ 
                 success: true,
                 usuarios,
