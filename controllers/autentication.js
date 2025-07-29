@@ -53,7 +53,7 @@ const AuthController ={
             await newUser.save();
 
             // 7. Generamos el token
-            const token = await generarJWT(newUser._id, newUser.email, newUser.globalRole);
+            //const token = await generarJWT(newUser._id, newUser.email, newUser.globalRole);
 
             // 8. Devolvemos el usuario (sin incluir la contraseña)
             res.status(201).json({
@@ -68,7 +68,7 @@ const AuthController ={
                         globalRole: defaultRole.name,
                         avatar: newUser.avatar,
                     },
-                    token,
+                    //token,
                 },
             });
         }catch(error){
