@@ -28,7 +28,7 @@ export const validarJWT = async (req, res, next)=>{
     try {
         const {id} = jwt.verify(token, process.env.LLAVESECRETA)
         
-        let user = await users.findById(id);
+        let user = await users.findById(id).populate('globalRole');
 
         if(!user){
             return res.status(401).json({
