@@ -1,33 +1,53 @@
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Importación de rutas
 import autentication from "./routes/autentication.js";
-/* import categories from "./routes/categories.js";
-import comments from "./routes/comments.js";
-import inteligenciaArtificial from "./routes/inteligenciaArtificial.js";
-import projects from "./routes/projects.js"; */
 import Roles from "./routes/roles.js";
-/*import states from "./routes/states.js";
-import tasks from "./routes/tasks.js";*/
 import Users from "./routes/users.js";
+import passwordResetRoutes from "./routes/passwordReset.js";
+
+// Configuración de rutas ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.use(express.json())
+// Middlewares
+app.use(express.json());
 
-app.use("/", autentication)
-// app.use("/", categories)
-// app.use("/", comments)
-// app.use("/", inteligenciaArtificial)
-// app.use("/", projects) 
-app.use("/", Roles)
-// app.use("/", states)
-// app.use("/", tasks)
-app.use("/", Users)
+// Configuración de rutas
+app.use("/", autentication);
+app.use("/", Roles);
+app.use("/", Users);
+app.use('/api/password-reset', passwordResetRoutes);
 
-app.listen(process.env.PORT, () => {
-    console.log(`Servidor escuchando en el Puerto: ${process.env.PORT}`);
-    mongoose
-    .connect(`${process.env.MONGODB_URI}`)
-    .then(() => console.log(`BASE DE DATOS CONECTADA. 🎉🎉`))
-})
+// Manejo de errores
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ 
+    success: false,
+    message: 'Error interno del servidor' 
+  });
+});
+
+// Conexión a MongoDB y inicio del servidor
+const startServer = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI); // Opciones eliminadas
+    console.log('✅ Conectado a MongoDB');
+
+    app.listen(process.env.PORT, () => {
+      console.log(`🚀 Servidor ejecutándose en http://localhost:${process.env.PORT}`);
+      console.log(`📧 Sistema de password reset disponible en /api/password-reset`);
+    });
+  } catch (error) {
+    console.error('❌ Error al conectar con MongoDB:', error.message);
+    process.exit(1);
+  }
+};
+
+startServer();
