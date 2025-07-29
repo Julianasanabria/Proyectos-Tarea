@@ -119,7 +119,7 @@ const AuthController ={
                 });
             }
 
-            // 5. Generamos el token
+            // 5. Generamos el token4
             const token = await generarJWT(user._id);
 
             // 6. Actualizamos lastLogin
