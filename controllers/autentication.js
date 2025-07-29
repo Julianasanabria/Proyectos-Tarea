@@ -68,7 +68,7 @@ const AuthController ={
                         globalRole: defaultRole.name,
                         avatar: newUser.avatar,
                     },
-                    token,
+                    //token,
                 },
             });
         }catch(error){
