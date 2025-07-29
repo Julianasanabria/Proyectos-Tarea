@@ -8,7 +8,7 @@ const AuthController ={
         try{
             const {firstName, lastName, email, password, globalRole} = req.body;
 
-            // 1. Validamos campos requeridos
+            // 1. Validamos campos requeridosà
 
             if (!firstName || !lastName || !email || !password) {
                 return res.status(400).json({
