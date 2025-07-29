@@ -53,7 +53,7 @@ const AuthController ={
             await newUser.save();
 
             // 7. Generamos el token
-            const token = await generarJWT(newUser._id, newUser.email, newUser.globalRole);
+            const token = await generarJWT(newUser._id);
 
             // 8. Devolvemos el usuario (sin incluir la contraseña)
             res.status(201).json({
@@ -120,7 +120,7 @@ const AuthController ={
             }
 
             // 5. Generamos el token
-            const token = await generarJWT(user._id, user.email, user.globalRole);
+            const token = await generarJWT(user._id);
 
             // 6. Actualizamos lastLogin
             user.lastLogin = new Date();
@@ -161,7 +161,7 @@ const AuthController ={
             const { _id, email, globalRole} = req.user;
 
             // Generamos un token nuevo
-            const token = await generarJWT(_id, email, globalRole);
+            const token = await generarJWT(_id);
 
             res.json({
                 success: true,
