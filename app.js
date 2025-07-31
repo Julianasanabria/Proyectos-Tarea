@@ -9,7 +9,8 @@ import autentication from "./routes/autentication.js";
 import Roles from "./routes/roles.js";
 import Users from "./routes/users.js";
 import passwordResetRoutes from "./routes/passwordReset.js";
-
+//impprtacion para avatar 
+import avatarRoutes from "./routes/avatar.js";
 // Configuración de rutas ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,6 +25,7 @@ app.use("/", autentication);
 app.use("/", Roles);
 app.use("/", Users);
 app.use('/api/password-reset', passwordResetRoutes);
+app.use('/api/avatar', avatarRoutes);
 
 // Manejo de errores
 app.use((err, req, res, next) => {

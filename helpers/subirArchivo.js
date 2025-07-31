@@ -3,7 +3,7 @@ import path from 'path'
 import {promises as fs } from 'fs';
 import {fileURLToPath} from 'url';
 
-const_dirname= path.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const subirArchivo=async(
     files,
@@ -15,7 +15,7 @@ const subirArchivo=async(
     if(!files?.archivo)throw new Error('No se proporciono ningun archivo');
     const {archivo}=files;
     //limpio el nombre y la extension para evitar ataques 
-    const nombrelimpio=archivo.name.replace(/[^a-zA-Z0-9._-]/g, '');
+    const nombreLimpio = archivo.name.replace(/[^a-zA-Z0-9._-]/g, '');
     const extension = path.extname(nombreLimpio).slice(1).toLowerCase();
     //validacion de extensión
     if(!extensionesValidas.includes(extension)){
