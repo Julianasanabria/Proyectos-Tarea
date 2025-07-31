@@ -1,29 +1,30 @@
 import Routes from "express"
-import AuthController from "../controllers/projects.js"
+import ProjectController from "../controllers/projects.js"
+import { validarJWT } from "../middlewares/validar-jwt.js";
 
 const router = Routes()
 
 // Listar proyectos del usuario autenticado
-router.get('/', AuthController.verifyToken, ProjectController.getProjectsByUser);
+router.get('/', validarJWT, ProjectController.getProjectsByUser);
 
 // Crear un nuevo proyecto
-router.post('/', AuthController.verifyToken, ProjectController.createProject);
+router.post('/', validarJWT, ProjectController.createProject);
 
 // Obtener un proyecto específico
-router.get('/:id', AuthController.verifyToken, ProjectController.getProjectById);
+router.get('/:id', validarJWT, ProjectController.getProjectById);
 
 // Actualizar un proyecto
-router.put('/:id', AuthController.verifyToken, ProjectController.updateProject);
+router.put('/:id', validarJWT, ProjectController.updateProject);
 
 // Eliminar un proyecto
-router.delete('/:id', AuthController.verifyToken, ProjectController.deleteProject);
+router.delete('/:id', validarJWT, ProjectController.deleteProject);
 
 // Agregar miembro al proyecto
-router.post('/:id/members', AuthController.verifyToken, ProjectController.addMember);
+router.post('/:id/members', validarJWT, ProjectController.addMember);
 
 // Remover miembro del proyecto
-router.delete('/:id/members/:userId', AuthController.verifyToken, ProjectController.removeMember);
+router.delete('/:id/members/:userId', validarJWT, ProjectController.removeMember);
 
 // Cambiar el estado del proyecto
-router.put('/:id/status', AuthController.verifyToken, ProjectController.updateProjectStatus);
+router.put('/:id/status', validarJWT, ProjectController.updateProjectStatus);
 export default router;

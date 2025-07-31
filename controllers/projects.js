@@ -134,7 +134,7 @@ const ProjectController = {
     },
 
     // Cambiar estado del proyecto
-    async changeStatus(req, res) {
+    async updateProjectStatus(req, res) {
         try {
             const { id } = req.params;
             const { statusId } = req.body;

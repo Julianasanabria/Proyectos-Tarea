@@ -8,6 +8,7 @@ import { fileURLToPath } from "url";
 import autentication from "./routes/autentication.js";
 import Roles from "./routes/roles.js";
 import Users from "./routes/users.js";
+import Categories from "./routes/categories.js"
 import passwordResetRoutes from "./routes/passwordReset.js";
 
 // Configuración de rutas ES Modules
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/", autentication);
 app.use("/", Roles);
 app.use("/", Users);
+app.use("/", Categories)
 app.use('/api/password-reset', passwordResetRoutes);
 
 // Manejo de errores

@@ -1,20 +1,20 @@
 import Routes from "express";
-import auth from '../middlewares/validar-jwt.js'
+import {validarJWT} from '../middlewares/validar-jwt.js'
 import CommentController from "../controllers/comments.js";
 
 const router = Routes()
 
 // Obtener todos los comentarios de un proyecto
-router.get('/project/:id/comments', auth, CommentController.getProjectComments);
+router.get('/project/:id/comments', validarJWT, CommentController.getProjectComments);
 
 // Crear un comentario en un proyecto
-router.post('/project/:id/comments', auth, CommentController.createComment);
+router.post('/project/:id/comments', validarJWT, CommentController.createComment);
 
 // Editar un comentario
-router.put('/comments/:id', auth, CommentController.updateComment);
+router.put('/comments/:id', validarJWT, CommentController.updateComment);
 
 // Eliminar un comentario
-router.delete('/comments/:id', auth, CommentController.deleteComment);
+router.delete('/comments/:id', validarJWT, CommentController.deleteComment);
 
 
 export default router;

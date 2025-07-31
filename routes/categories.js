@@ -1,19 +1,20 @@
 import Routes from "express"
-import AuthController from "../controllers/categories.js"
+import categoryController from "../controllers/categories.js"
+import { validarJWT } from "../middlewares/validar-jwt.js";
 
 const router = Routes()
 
 // Obtener todas las categorías (protegido)
-router.get('/', AuthController.verifyToken, CategoryController.getAll);
+router.get('/categories', validarJWT, categoryController.getAllCategories);
 
 // Crear una categoría (protegido)
-router.post('/', AuthController.verifyToken, CategoryController.create);
+router.post('/', validarJWT, categoryController.createCategory);
 
 // Actualizar una categoría por ID (protegido)
-router.put('/:id', AuthController.verifyToken, CategoryController.update);
+/* router.put('/:id', validarJWT, categoryController.update);
 
 // Eliminar una categoría por ID (protegido)
-router.delete('/:id', AuthController.verifyToken, CategoryController.delete);
+router.delete('/:id', validarJWT, categoryController.delete); */
 
 
 export default router;

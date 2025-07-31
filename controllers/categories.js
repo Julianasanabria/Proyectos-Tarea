@@ -1,7 +1,7 @@
-/* import category from "../models/categories.js";
+import category from "../models/categories.js";
 
 
-export default {
+const categoryController = {
   async getAllCategories(req, res) {
     try{
         const categories = await category.find ({ isActive:true});
@@ -17,9 +17,19 @@ export default {
 
         const newCategory =({
             name,
+            description,
             isActive:true,
             createdBy: req.userId
         })
+        newCategory.save()
+
+      }catch(error){
+        console.log('Error al crear la categoria ', error)
+        res.status(500).json({
+          msg: "Error interno del servidor al crear la Categoria"
+        })
       }
   }
-} */
+}
+
+export default categoryController;
