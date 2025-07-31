@@ -8,7 +8,7 @@ const router = Routes()
 router.get('/', validarJWT, ProjectController.getProjectsByUser);
 
 // Crear un nuevo proyecto
-router.post('/', validarJWT, ProjectController.createProject);
+router.post('/createproject', validarJWT, ProjectController.createProject);
 
 // Obtener un proyecto específico
 router.get('/:id', validarJWT, ProjectController.getProjectById);

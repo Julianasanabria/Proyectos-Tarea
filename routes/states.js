@@ -11,7 +11,7 @@ router.get('/', validarJWT, StateController.getAllStates);
 router.get('/:id', validarJWT, StateController.getStateById);
 
 // Crear un nuevo estado
-router.post('/', validarJWT, StateController.createState);
+router.post('/createState', validarJWT, StateController.createState);
 
 // Actualizar un estado
 router.put('/:id', validarJWT, StateController.updateState);

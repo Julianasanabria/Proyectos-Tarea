@@ -26,8 +26,31 @@ const ProjectController = {
     // Crear un nuevo proyecto
     async createProject(req, res) {
         try {
+
+            // Validación: verificar que req.user exista
+            if (!req.user){
+                return res.status(401).json({
+                    msg: "Usuario no autenticado. Debes iniciar sesión"
+                });
+            }
+
             const { name, description, category, priority, startDate, endDate, estimatedHours, budget, tags } = req.body;
-            const owner = req.user.id;
+
+            // Verificar que el usuario exista (opcional pero recomendado)
+            const user = await User.findById(req.user.id);
+            if (!user){
+                return res.status(404).json({ 
+                    msg: "Usuario no encontrado" 
+                });
+            }
+
+            const owner = user;
+
+            // Buscar estado inicial (manejar error si no existe)
+            const initialState = await State.findOne({ type: "Project", name: "Planificación" });
+            if (!initialState) {
+                return res.status(500).json({ msg: "Estado inicial de proyecto no encontrado" });
+            }
             const project = new Project({
                 name,
                 description,
@@ -48,6 +71,7 @@ const ProjectController = {
             await project.save();
             res.status(201).json(project);
         } catch (error) {
+            console.log('Error al crear el proyecto ', error)
             res.status(500).json({ msg: "Error al crear proyecto" });
         }
     },

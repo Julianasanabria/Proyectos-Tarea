@@ -13,15 +13,17 @@ const categoryController = {
 
   async createCategory(req, res){
       try{////
+        console.log('req.user:', req.user);
         const {name, description}=req.body;
 
-        const newCategory =({
+        const newCategory = new category({
             name,
             description,
             isActive:true,
-            createdBy: req.userId
+            createBy: req.user
         })
-        newCategory.save()
+        await newCategory.save();
+        res.status(201).json(newCategory);
 
       }catch(error){
         console.log('Error al crear la categoria ', error)
